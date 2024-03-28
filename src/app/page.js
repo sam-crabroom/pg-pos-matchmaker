@@ -33,11 +33,19 @@ export default function Home() {
   const [finalCompareResponse, setFinalCompareResponse] = useState("");
   const [finalCompareResponsePOS, setFinalCompareResponsePOS] = useState("");
   const [buttonText, setButtonText] = useState(null);
+  const [isPGQVisible, setIsPGQVisible] = useState(false);
+
+  const [showCountryQ, setShowCountryQ] = useState(false);
+  const [showCurrencyQ, setShowCurrencyQ] = useState(false);
 
   const [selectedValuesFilters, setSelectedValuesFilters] = useState({
     country: "option1",
     currency: "option1",
   });
+
+  const handleClosePGQPopup = () => {
+    setIsPGQVisible(false);
+  };
 
   const handleClosePGPopup = () => {
     setIsPGPopupVisible(false);
@@ -370,12 +378,10 @@ export default function Home() {
     };
 
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
         <div
           className={`bg-white rounded-lg shadow-md ${
-            isPGFullScreen
-              ? "w-screen h-screen"
-              : "max-w-4xl w-auto max-h-3/4 min-h-20"
+            isPGFullScreen ? "w-screen h-screen" : "max-w-4xl w-auto max-h-3/4"
           }  overflow-y-auto relative text-black custom-scrollbar`}
         >
           <div className="p-4">
@@ -407,7 +413,6 @@ export default function Home() {
             >
               {isPGFullScreen ? (
                 <svg
-                  class="feather feather-minimize-2"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -760,7 +765,6 @@ export default function Home() {
             >
               {isPOSFullScreen ? (
                 <svg
-                  class="feather feather-minimize-2"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -908,11 +912,9 @@ export default function Home() {
     const [showSecurityFilter, setShowSecurityFilter] = useState(false);
     const [showCountriesFilter, setShowCountriesFilter] = useState(false);
     const [showCurrenciesFilter, setShowCurrenciesFilter] = useState(false);
-    const [isPGQVisible, setIsPGQVisible] = useState(false);
+
     const [isSelectedPOSVisible, setSelectedPOSVisible] = useState(false);
 
-    const [showCountryQ, setShowCountryQ] = useState(false);
-    const [showCurrencyQ, setShowCurrencyQ] = useState(false);
     // const [finalSelectedPOSResponse, setFinalSelectedPOSResponse] = useState([]);
 
     // Add state variables
@@ -930,10 +932,6 @@ export default function Home() {
     // const [selectedGateways, setSelectedGateways] = useState([]);
 
     const [showPM, setShowPM] = useState(false);
-
-    const handleClosePGQPopup = () => {
-      setIsPGQVisible(false);
-    };
 
     const handleCloseSelectedPOSPopup = () => {
       setSelectedPOSVisible(false);
@@ -1312,10 +1310,10 @@ export default function Home() {
                 {`Compare(${checkedCount})`}
               </button>
             </div>
-            <div className="ml-2">
+            <div className="ml-2"> 
               <button
                 type="button"
-                className="mt-2 px-4 py-2 mb-2 text-white rounded-md transition-colors w-full bg-sky-500 min-w-60"
+                className="mt-2 px-4 py-2 mb-2 justify-center items-center text-white rounded-md transition-colors w-full bg-sky-500 min-w-60"
                 onClick={handleScheduleSubmit}
               >
                 {/* I need consultation 🡢 */}
@@ -1346,7 +1344,7 @@ export default function Home() {
                       onMouseLeave={() => setShowPMinfo(false)}
                     >
                       <svg
-                        enable-background="new 0 0 48 48"
+                        enableBackground="new 0 0 48 48"
                         height={24}
                         id="Layer_3"
                         version="1.1"
@@ -2257,8 +2255,8 @@ export default function Home() {
 
         {isPGQVisible && (
           <div>
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
-              <div className="bg-white rounded-lg p-6 max-w-4xl w-auto min-h-3/4 relative">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="bg-white min-h-full min-w-full rounded-lg p-6 relative">
                 <button
                   className={`text-gray-600 hover:text-gray-800 absolute top-2 right-4`}
                   onClick={handleClosePGQPopup}
@@ -2497,12 +2495,14 @@ export default function Home() {
           </div>
         )}
 
-        {isPGPopupVisible && (
-          <PaymentGatewayPopup
-            finalCompareResponse={finalCompareResponse}
-            selectedGateways={selectedGateways}
-          />
-        )}
+        <div>
+          {isPGPopupVisible && (
+            <PaymentGatewayPopup
+              finalCompareResponse={finalCompareResponse}
+              selectedGateways={selectedGateways}
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -2871,9 +2871,9 @@ export default function Home() {
 
   return (
     <body>
-      <main className="flex flex-col items-center justify-center min-h-screen p-8 sm:p-16 md:p-24 lg:p-32 xl:p-40">
+      <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-10 md:p-20 lg:p-32 xl:p-40">
         <div className="w-full max-w-full rounded-xl p-4 sm:w-3/4 sm:gap-2">
-          <div className="flex items-center justify-end w-full mb-1 gap-2">
+          <div className="hidden sm:flex items-center justify-end w-full mb-1 gap-2">
             <input
               type="checkbox"
               id="consultationCheckbox"
@@ -2889,8 +2889,8 @@ export default function Home() {
             </label>
           </div>
           <div className="mt-2 mb-4 flex flex-col sm:flex-row sm:justify-between">
-            <div className="flex w-full flex-col items-start sm:flex-row sm:justify-between">
-              <label className="flex cursor-pointer select-none items-center ml-2 mr-2 mt-2">
+            <div className="flex w-full flex-col items-center sm:items-start sm:flex-row sm:justify-between">
+              <label className="flex cursor-pointer select-none items-center ml-1 mr-2 mt-2">
                 <div className="relative">
                   <input
                     type="checkbox"
@@ -2913,9 +2913,9 @@ export default function Home() {
                 </div>
               </label>
 
-              <div className="flex w-full mt-2 flex-col gap-2 sm:flex-row sm:w-3/4">
+              <div className="flex w-full mt-4 lg:mt-2 flex-col gap-4 lg:gap-2 sm:flex-row sm:w-3/4">
                 <select
-                  className="h-10 w-full rounded-full border-none pl-2 text-sm text-gray-400 cursor-pointer shadow-md shadow-gray-400 focus:outline-none"
+                  className="h-10 w-full rounded-xl sm:rounded-full border-none pl-2 text-sm text-gray-400 cursor-pointer shadow-md shadow-gray-400 focus:outline-none"
                   value={selectedValuesFilters.country}
                   onChange={handleCountryChange}
                 >
@@ -2928,7 +2928,7 @@ export default function Home() {
                 </select>
                 <select
                   id="currencyDropdown"
-                  className="h-10 w-full rounded-full border-none pl-2 text-sm text-gray-400 cursor-pointer shadow-md shadow-gray-400 focus:outline-none"
+                  className="h-10 w-full rounded-xl sm:rounded-full border-none pl-2 text-sm text-gray-400 cursor-pointer shadow-md shadow-gray-400 focus:outline-none"
                   onChange={handleCurrencyChange}
                   value={selectedValuesFilters.currency}
                 >
@@ -2949,7 +2949,7 @@ export default function Home() {
               <input
                 type="text"
                 id="floating_outlined"
-                className="block px-2.5 pb-2.5 pt-4 w-full shadow-md shadow-gray-400 h-20 text-sm text-black bg-white rounded-3xl border border-gray-300 dark:text-black dark:border-gray-200 dark:focus:border-gray-400 focus:outline-none focus:ring- focus:border-gray-400 peer"
+                className="block px-2.5 pb-2.5 pt-4 w-full shadow-md shadow-gray-400 h-20 text-sm text-black bg-white rounded-xl sm:rounded-3xl border border-gray-300 dark:text-black dark:border-gray-200 dark:focus:border-gray-400 focus:outline-none focus:ring- focus:border-gray-400 peer"
                 placeholder=" "
                 onChange={handleInputChange}
               />
@@ -2960,9 +2960,10 @@ export default function Home() {
                 Requirements
               </label>
             </div>
+            <div className="hidden sm:flex">
             <button
               type="button"
-              className={`mb-2 ml-2 h-20 text-white transition-colors min-w-20 rounded-3xl shadow-md shadow-sky-600
+              className={`mb-2 ml-2 invisible sm:visible h-20 text-white transition-colors min-w-20 rounded-3xl shadow-md shadow-sky-600
                 ${
                   isButtonDisabled
                     ? " bg-sky-500 bg-opacity-55 cursor-not-allowed"
@@ -2989,7 +2990,54 @@ export default function Home() {
               )}
               {!isLoading && "🡢"}
             </button>
+            </div>
           </div>
+          <div className="flex sm:hidden items-center justify-start w-full mb-2 ml-2 gap-2">
+            <input
+              type="checkbox"
+              id="consultationCheckbox"
+              onChange={handleConsultationChange}
+              checked={consultationNeeded}
+              className="bg h-4 w-4 border border-gray-400 rounded checked:bg-black checked:border-transparent focus:outline-none focus:bg-black"
+            />
+            <label
+              htmlFor="consultationCheckbox"
+              className="text-sky-900 font-semibold text-sm"
+            >
+              I need consultation
+            </label>
+          </div>
+          <div className="flex justify-center sm:hidden">
+          <button
+              type="button"
+              className={`mb-2 ml-2 h-10 min-w-40 items-center text-white transition-colors rounded-md shadow-md shadow-sky-600
+                ${
+                  isButtonDisabled
+                    ? " bg-sky-500 bg-opacity-55 cursor-not-allowed"
+                    : "hover:border-gray-300 bg-sky-500 hover:bg-sky-400 cursor-pointer"
+                }`}
+              onClick={handleButtonClick}
+              disabled={isButtonDisabled}
+            >
+              {isLoading && (
+                <div className="flex justify-center items-center">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-100"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeDasharray="60 40"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+              )}
+              {!isLoading && "Submit 🡢"}
+            </button>
+            </div>
         </div>
 
         {/* <iframe src="https://gateway-selector-app.vercel.app/" name="iframe_a" className="w-full h-96 bg-white" style={{"backgroundColor": "#ffffff"}} title="Iframe Example"></iframe> */}
@@ -3035,13 +3083,12 @@ export default function Home() {
               >
                 {isFullScreen ? (
                   <svg
-                    class="feather feather-minimize-2"
                     fill="none"
                     height="24"
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
                     width="24"
                     xmlns="http://www.w3.org/2000/svg"
